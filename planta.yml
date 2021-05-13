@@ -1,0 +1,27 @@
+strategies:
+  general2:
+    - say "¿Dame el nombre de la planta?"
+    - input planta_specifc
+    - plantas.propiedad(planta_specifc,'recomendacion_planta',db)
+    - if recomendacion_planta then say "Te recomiento la planta {}".format(recomendacion_planta)
+    #- if recomendacion_planta then say propiedad
+    - if not recomendacion_planta then say "No pude encontrar una planta"
+
+  specific2:
+    - plantas.propiedad(planta_specifc,'recomendacion_planta',db)
+    - if recomendacion_planta then say "Te recomiento la planta {}".format(recomendacion_planta)
+    #- plantas.propiedad(recomendacion_planta,"propiedad",db)
+    #- if recomendacion_planta then say propiedad
+    - if not recomendacion_planta then say "No pude encontrar una planta"
+
+
+
+script:
+  - say "Te dare información de la planta {}".format(planta_specifc)
+  - if planta_specifc == "UNK" then solve general2
+  - if planta_specifc != "UNK" then solve specific2
+  - say "¿Quieres continuar?"
+  - input continuar  | asign si:yes no:no
+
+  
+    

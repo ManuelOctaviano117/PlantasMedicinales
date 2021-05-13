@@ -1,0 +1,62 @@
+settings:
+    name: MANU
+
+conversations:
+    - 'hello.yaml'
+    - 'planta.yml' ##Nuevas incorporaciones en WINDOWS
+    - 'malestar.yml'
+
+dbs:
+    plantas: import_csv data2.csv
+
+regex:
+    name:
+        - '(mi nombre es |me llamo )?(.*)'
+
+    respuesta:
+        - '(me duele |si, tengo |tengo dolor de)?(.*)'
+        - '(dime sobre |quiero informacion |que sabes sobre )?(.*)'
+
+    dolor:
+        - '((dolor de |gripe |dolor)?(.*))'
+    
+    info:
+        - '((Menta |Manzanilla |Ruda | )?(.*))'
+
+
+
+strategies:
+    name:
+        - say "Hola mi nombre es MANU y soy un sistema que te ayudara con algun malestar que tengas y darte información adecuada"
+        - say "¿Cúal es tu nombre?"
+        - input name | regex name 2
+        - remember name
+        - say "Mucho gusto en conocerte"
+    principal:
+        - say "¿Tienes algún malestar o quieres información de alguna planta {}?".format(name)
+        - input respuesta | model plantas 
+        ###Nueva modificación malestar o información
+        - set_slot status_intention respuesta | asign planta:planta malestar:mal dolor:mal 
+        - set_slot status_info respuesta | regex respuesta ## FILTRA RESPUESTAS VALIDAS
+        - set_slot malestar_specifc respuesta | regex dolor 1
+        - set_slot planta_specifc respuesta | regex info 1
+        - say f"Entiendo que estás {status_intention} porque me dijiste {respuesta}"
+        ####Dolor especifico
+        - if status_intention == "mal" then solve malestar
+        - if status_intention == "planta" then solve planta
+        - if status_intention == "UNK" and malestar_specifc != "UNK" then solve malestar
+        - if status_intention == "UNK" or statutus_intention == None and planta_specifc != "UNK" then solve planta 
+        
+
+plugins:
+    - plantas
+
+script:
+    - solve name
+    - add_slot continuar
+    - set_slot continuar "yes"
+    - while continuar == "yes" then solve principal
+    - if continuar == "no" then say "ADIOS"
+    
+
+    

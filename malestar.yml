@@ -1,0 +1,26 @@
+strategies:
+  general:
+    - say "¿Dame tu malestar?"
+    - input mal
+    - plantas.random_planta(mal,'recomendacion_planta',db)
+    - if recomendacion_planta then say "Te recomiento la planta {}".format(recomendacion_planta)
+    - plantas.propiedad(recomendacion_planta,"propiedad",db)
+    - if recomendacion_planta then say propiedad
+    - if not recomendacion_planta then say "No pude encontrar una planta"
+
+  specific:
+    - plantas.random_planta(malestar_specifc,'recomendacion_planta',db)
+    - if recomendacion_planta then say "Te recomiento la planta {}".format(recomendacion_planta)
+    - plantas.propiedad(recomendacion_planta,"propiedad",db)
+    - if recomendacion_planta then say propiedad
+    - if not recomendacion_planta then say "No pude encontrar una planta"
+
+
+
+script:
+  - say "Te ayudare con tu malestar"
+  - say "{}".format(malestar_specifc)
+  - if malestar_specifc == "UNK" then solve general
+  - if malestar_specifc != "UNK" then solve specific
+  - say "¿Quieres continuar?"
+  - input continuar  | asign si:yes no:no
