@@ -6,6 +6,14 @@ conversations:
     - 'planta.yml' ##Nuevas incorporaciones en WINDOWS
     - 'malestar.yml'
 
+models:
+    plantas:
+        type: classifier
+        classes:
+            0 : 'planta'
+            1 : 'malestar'
+            2 : 'ambas'
+
 dbs:
     plantas: import_csv data2.csv
 
