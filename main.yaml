@@ -31,8 +31,6 @@ regex:
     info:
         - '((Menta |Manzanilla |Ruda | )?(.*))'
 
-
-
 strategies:
     name:
         - say "Hola mi nombre es MANU y soy un sistema que te ayudara con algun malestar que tengas y darte información adecuada"
@@ -42,12 +40,13 @@ strategies:
         - say "Mucho gusto en conocerte"
     principal:
         - say "¿Tienes algún malestar o quieres información de alguna planta {}?".format(name)
-        - input respuesta | model plantas 
+        - input respuesta1
+        - set_slot respuesta respuesta1 | model plantas
         ###Nueva modificación malestar o información
-        - set_slot status_intention respuesta | asign planta:planta malestar:mal dolor:mal 
-        - set_slot status_info respuesta | regex respuesta ## FILTRA RESPUESTAS VALIDAS
-        - set_slot malestar_specifc respuesta | regex dolor 1
-        - set_slot planta_specifc respuesta | regex info 1
+        - set_slot status_intention respuesta | asign planta:planta malestar:mal dolor:mal
+        - set_slot status_info respuesta1 | regex respuesta ## FILTRA RESPUESTAS VALIDAS
+        - set_slot malestar_specifc respuesta1 | regex dolor 1
+        - set_slot planta_specifc respuesta1 | regex info 1
         - say f"Entiendo que estás {status_intention} porque me dijiste {respuesta}"
         ####Dolor especifico
         - if status_intention == "mal" then solve malestar
